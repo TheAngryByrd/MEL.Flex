@@ -48,12 +48,12 @@ module LoggerKeyConsts =
 // .. Some function
 
 let userName = "SpockV"
-logger.LogIWarning($"Some user: {(LoggerKeyConsts.UserName, userName)} has logged in")
+logger.LogFWarning($"Some user: {(LoggerKeyConsts.UserName, userName)} has logged in")
 ```
 
 The important changes are:
 
-1. `LogWarning` -> `LogIWarning`
+1. `LogWarning` -> `LogFWarning`
 2. `$` in front of the string
 3. `{Username}` became `{(LoggerKeyConsts.UserName, userName)}`
     - The latter part of this syntax is a tuple with two values.
@@ -67,7 +67,7 @@ module LogConsts =
 
 // .. Some function
 let userName = "SpockV"
-logger.LogIWarning($"Some user: {LogConsts.userName userName} has logged in")
+logger.LogFWarning($"Some user: {LogConsts.userName userName} has logged in")
 ```
 
 This way, you could apply any type safety or normalization to your log data.
@@ -129,14 +129,14 @@ $ ./build.sh  <optional buildtarget>// on unix
 The bin of your library should look similar to:
 
 ```
-$ tree src/MyCoolNewLib/bin/
-src/MyCoolNewLib/bin/
+$ tree src/MEL.Flex/bin/
+src/MEL.Flex/bin/
 └── Debug
     └── net50
-        ├── MyCoolNewLib.deps.json
-        ├── MyCoolNewLib.dll
-        ├── MyCoolNewLib.pdb
-        └── MyCoolNewLib.xml
+        ├── MEL.Flex.deps.json
+        ├── MEL.Flex.dll
+        ├── MEL.Flex.pdb
+        └── MEL.Flex.xml
 
 ```
 
@@ -171,7 +171,7 @@ src/MyCoolNewLib/bin/
 ```sh
 git add .
 git commit -m "Scaffold"
-git remote add origin https://github.com/user/MyCoolNewLib.git
+git remote add origin https://github.com/user/MEL.Flex.git
 git push -u origin master
 ```
 
@@ -210,8 +210,8 @@ First release
 ### Added
 - This release already has lots of features
 
-[Unreleased]: https://github.com/user/MyCoolNewLib.git/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/user/MyCoolNewLib.git/releases/tag/v0.1.0
+[Unreleased]: https://github.com/user/MEL.Flex.git/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/user/MEL.Flex.git/releases/tag/v0.1.0
 ```
 
 - You can then use the `Release` target, specifying the version number either in the `RELEASE_VERSION` environment

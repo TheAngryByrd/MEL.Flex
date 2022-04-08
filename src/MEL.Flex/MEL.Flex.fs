@@ -97,76 +97,76 @@ module Tuple =
                 (this :> IEnumerable<_>).GetEnumerator() :> IEnumerator
 
     type ILogger with
-        member this.LogITrace(eventId: EventId, ex: Exception, message: FormattableString) =
-            this.LogI(LogLevel.Trace, eventId, ex, message)
+        member this.LogFTrace(eventId: EventId, ex: Exception, message: FormattableString) =
+            this.LogF(LogLevel.Trace, eventId, ex, message)
 
-        member this.LogITrace(eventId: EventId, message: FormattableString) =
-            this.LogI(LogLevel.Trace, eventId, message)
+        member this.LogFTrace(eventId: EventId, message: FormattableString) =
+            this.LogF(LogLevel.Trace, eventId, message)
 
-        member this.LogITrace(ex: Exception, message: FormattableString) = this.LogI(LogLevel.Trace, ex, message)
-        member this.LogITrace(message: FormattableString) = this.LogI(LogLevel.Trace, message)
+        member this.LogFTrace(ex: Exception, message: FormattableString) = this.LogF(LogLevel.Trace, ex, message)
+        member this.LogFTrace(message: FormattableString) = this.LogF(LogLevel.Trace, message)
 
-        member this.LogIDebug(eventId: EventId, ex: Exception, message: FormattableString) =
-            this.LogI(LogLevel.Debug, eventId, ex, message)
+        member this.LogFDebug(eventId: EventId, ex: Exception, message: FormattableString) =
+            this.LogF(LogLevel.Debug, eventId, ex, message)
 
-        member this.LogIDebug(eventId: EventId, message: FormattableString) =
-            this.LogI(LogLevel.Debug, eventId, message)
+        member this.LogFDebug(eventId: EventId, message: FormattableString) =
+            this.LogF(LogLevel.Debug, eventId, message)
 
-        member this.LogIDebug(ex: Exception, message: FormattableString) = this.LogI(LogLevel.Debug, ex, message)
-        member this.LogIDebug(message: FormattableString) = this.LogI(LogLevel.Debug, message)
+        member this.LogFDebug(ex: Exception, message: FormattableString) = this.LogF(LogLevel.Debug, ex, message)
+        member this.LogFDebug(message: FormattableString) = this.LogF(LogLevel.Debug, message)
 
-        member this.LogIInformation(eventId: EventId, ex: Exception, message: FormattableString) =
-            this.LogI(LogLevel.Information, eventId, ex, message)
+        member this.LogFInformation(eventId: EventId, ex: Exception, message: FormattableString) =
+            this.LogF(LogLevel.Information, eventId, ex, message)
 
-        member this.LogIInformation(eventId: EventId, message: FormattableString) =
-            this.LogI(LogLevel.Information, eventId, message)
+        member this.LogFInformation(eventId: EventId, message: FormattableString) =
+            this.LogF(LogLevel.Information, eventId, message)
 
-        member this.LogIInformation(ex: Exception, message: FormattableString) =
-            this.LogI(LogLevel.Information, ex, message)
+        member this.LogFInformation(ex: Exception, message: FormattableString) =
+            this.LogF(LogLevel.Information, ex, message)
 
-        member this.LogIInformation(message: FormattableString) =
-            this.LogI(LogLevel.Information, message)
+        member this.LogFInformation(message: FormattableString) =
+            this.LogF(LogLevel.Information, message)
 
-        member this.LogIWarning(eventId: EventId, ex: Exception, message: FormattableString) =
-            this.LogI(LogLevel.Warning, eventId, ex, message)
+        member this.LogFWarning(eventId: EventId, ex: Exception, message: FormattableString) =
+            this.LogF(LogLevel.Warning, eventId, ex, message)
 
-        member this.LogIWarning(eventId: EventId, message: FormattableString) =
-            this.LogI(LogLevel.Warning, eventId, message)
+        member this.LogFWarning(eventId: EventId, message: FormattableString) =
+            this.LogF(LogLevel.Warning, eventId, message)
 
-        member this.LogIWarning(ex: Exception, message: FormattableString) =
-            this.LogI(LogLevel.Warning, ex, message)
+        member this.LogFWarning(ex: Exception, message: FormattableString) =
+            this.LogF(LogLevel.Warning, ex, message)
 
-        member this.LogIWarning(message: FormattableString) = this.LogI(LogLevel.Warning, message)
+        member this.LogFWarning(message: FormattableString) = this.LogF(LogLevel.Warning, message)
 
-        member this.LogIError(eventId: EventId, ex: Exception, message: FormattableString) =
-            this.LogI(LogLevel.Error, eventId, ex, message)
+        member this.LogFError(eventId: EventId, ex: Exception, message: FormattableString) =
+            this.LogF(LogLevel.Error, eventId, ex, message)
 
-        member this.LogIError(eventId: EventId, message: FormattableString) =
-            this.LogI(LogLevel.Error, eventId, message)
+        member this.LogFError(eventId: EventId, message: FormattableString) =
+            this.LogF(LogLevel.Error, eventId, message)
 
-        member this.LogIError(ex: Exception, message: FormattableString) = this.LogI(LogLevel.Error, ex, message)
-        member this.LogIError(message: FormattableString) = this.LogI(LogLevel.Error, message)
+        member this.LogFError(ex: Exception, message: FormattableString) = this.LogF(LogLevel.Error, ex, message)
+        member this.LogFError(message: FormattableString) = this.LogF(LogLevel.Error, message)
 
-        member this.LogICritical(eventId: EventId, ex: Exception, message: FormattableString) =
-            this.LogI(LogLevel.Critical, eventId, ex, message)
+        member this.LogFCritical(eventId: EventId, ex: Exception, message: FormattableString) =
+            this.LogF(LogLevel.Critical, eventId, ex, message)
 
-        member this.LogICritical(eventId: EventId, message: FormattableString) =
-            this.LogI(LogLevel.Critical, eventId, message)
+        member this.LogFCritical(eventId: EventId, message: FormattableString) =
+            this.LogF(LogLevel.Critical, eventId, message)
 
-        member this.LogICritical(ex: Exception, message: FormattableString) =
-            this.LogI(LogLevel.Critical, ex, message)
+        member this.LogFCritical(ex: Exception, message: FormattableString) =
+            this.LogF(LogLevel.Critical, ex, message)
 
-        member this.LogICritical(message: FormattableString) = this.LogI(LogLevel.Critical, message)
+        member this.LogFCritical(message: FormattableString) = this.LogF(LogLevel.Critical, message)
 
-        member this.LogI(logLevel: LogLevel, message: FormattableString) = this.LogI(logLevel, 0, null, message)
+        member this.LogF(logLevel: LogLevel, message: FormattableString) = this.LogF(logLevel, 0, null, message)
 
-        member this.LogI(logLevel: LogLevel, eventId: EventId, message: FormattableString) =
-            this.LogI(logLevel, eventId, null, message)
+        member this.LogF(logLevel: LogLevel, eventId: EventId, message: FormattableString) =
+            this.LogF(logLevel, eventId, null, message)
 
-        member this.LogI(logLevel: LogLevel, ex: Exception, message: FormattableString) =
-            this.LogI(logLevel, 0, ex, message)
+        member this.LogF(logLevel: LogLevel, ex: Exception, message: FormattableString) =
+            this.LogF(logLevel, 0, ex, message)
 
-        member this.LogI(logLevel: LogLevel, eventId: EventId, ex: Exception, message: FormattableString) =
+        member this.LogF(logLevel: LogLevel, eventId: EventId, ex: Exception, message: FormattableString) =
             this.Log(
                 logLevel,
                 eventId,

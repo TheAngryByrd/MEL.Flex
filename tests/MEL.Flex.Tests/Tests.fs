@@ -71,7 +71,7 @@ module TupleTests =
 
                   let expectedState = [| kvp "{OriginalFormat}" "LOL" |]
 
-                  logger.LogICritical $"""LOL"""
+                  logger.LogFCritical $"""LOL"""
                   let (level, eventId, message, state, ex, scopes) = logger.LogCalls |> Seq.head
                   Expect.equal level LogLevel.Critical ""
                   Expect.equal eventId (EventId.op_Implicit 0) ""
@@ -91,7 +91,7 @@ module TupleTests =
                       [| kvp $"@{theConst}" theUser
                          kvp "{OriginalFormat}" $"Some user {{@{theConst}}} logged into starship" |]
 
-                  logger.LogIError $"""Some user {(theConst, theUser)} logged into starship"""
+                  logger.LogFError $"""Some user {(theConst, theUser)} logged into starship"""
 
                   let (level, eventId, message, state, ex, scopes) = logger.LogCalls |> Seq.head
                   Expect.equal level LogLevel.Error ""
@@ -113,7 +113,7 @@ module TupleTests =
                       [| kvp $"@{theConst}" theUser
                          kvp "{OriginalFormat}" $"Some user {{@{theConst}}} logged into starship" |]
 
-                  logger.LogIError $"""Some user {struct (theConst, theUser)} logged into starship"""
+                  logger.LogFError $"""Some user {struct (theConst, theUser)} logged into starship"""
 
                   let (level, eventId, message, state, ex, scopes) = logger.LogCalls |> Seq.head
                   Expect.equal level LogLevel.Error ""
@@ -135,7 +135,7 @@ module TupleTests =
                       [| kvp $"@{theConst}" theUser
                          kvp "{OriginalFormat}" $"Some user {{@{theConst}}} logged into starship" |]
 
-                  logger.LogIError $"""Some user {LogConsts.userName theUser} logged into starship"""
+                  logger.LogFError $"""Some user {LogConsts.userName theUser} logged into starship"""
 
                   let (level, eventId, message, state, ex, scopes) = logger.LogCalls |> Seq.head
                   Expect.equal level LogLevel.Error ""
@@ -156,7 +156,7 @@ module TupleTests =
                       [| kvp $"@{theConst}" theUser
                          kvp "{OriginalFormat}" $"Some user {{@{theConst}}} logged into starship" |]
 
-                  logger.LogIWarning $"""Some user {theUser} logged into starship"""
+                  logger.LogFWarning $"""Some user {theUser} logged into starship"""
 
                   let (level, eventId, message, state, ex, scopes) = logger.LogCalls |> Seq.head
                   Expect.equal level LogLevel.Warning ""
