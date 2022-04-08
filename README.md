@@ -12,7 +12,7 @@ MEL.Flex (FSharp Logging EXtensions for [Microsoft.Extensions.Logging](https://d
 
     ```fsharp
     let userName = "KirkJ1701"
-    logger.LogWarning("Some user: {Username} has logged in", userName)
+    logger.LogWarning("Some user: {UserName} has logged in", userName)
     ```
 
     if I wanted to add an IpAddress
@@ -20,7 +20,7 @@ MEL.Flex (FSharp Logging EXtensions for [Microsoft.Extensions.Logging](https://d
     ```fsharp
     let userName = "KirkJ1701"
     let ipAddress = "KirkJ1701"
-    logger.LogWarning("Some user: {Username} has logged in from {IpAddress}", ipAddress, userName)
+    logger.LogWarning("Some user: {UserName} has logged in from {IpAddress}", ipAddress, userName)
     ```
 
     I can easily mess up the arguments. This of course looks easy but gets more difficult as you add more logs to structure or rearrange your logs.
@@ -43,7 +43,6 @@ One of the currently supported ways is to use tuples. Taking an example above:
 ```fsharp
 // Some file that containts your normalized names
 module LoggerKeyConsts =
-
     let [<Literal>] UserName = "UserName"
 
 // .. Some function
@@ -71,7 +70,7 @@ GitHub Actions |
 [![GitHub Actions](https://github.com/TheAngryByrd/MEL.Flex/workflows/Build%20master/badge.svg)](https://github.com/TheAngryByrd/MEL.Flex/actions?query=branch%3Amaster) |
 [![Build History](https://buildstats.info/github/chart/TheAngryByrd/MEL.Flex)](https://github.com/TheAngryByrd/MEL.Flex/actions?query=branch%3Amaster) |
 
-## NuGet 
+## NuGet
 
 Package | Stable | Prerelease
 --- | --- | ---
