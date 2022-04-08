@@ -53,8 +53,10 @@ type InMemoryLogger() =
 
 module TupleTests =
     module LogConsts =
-        let [<Literal>] ``user.name`` = "user.name"
-        let inline userName (s : string) = struct (``user.name``, s)
+        [<Literal>]
+        let ``user.name`` = "user.name"
+
+        let inline userName (s: string) = struct (``user.name``, s)
 
     open Helpers
     open MEL.Flex.Tuple
@@ -111,7 +113,7 @@ module TupleTests =
                       [| kvp $"@{theConst}" theUser
                          kvp "{OriginalFormat}" $"Some user {{@{theConst}}} logged into starship" |]
 
-                  logger.LogIError $"""Some user {struct(theConst, theUser)} logged into starship"""
+                  logger.LogIError $"""Some user {struct (theConst, theUser)} logged into starship"""
 
                   let (level, eventId, message, state, ex, scopes) = logger.LogCalls |> Seq.head
                   Expect.equal level LogLevel.Error ""
