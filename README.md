@@ -1,7 +1,67 @@
 # MEL.Flex
 
-[Enter useful description for MEL.Flex]
+## What is this?
 
+MEL.Flex (FSharp Logging EXtensions for [Microsoft.Extensions.Logging](https://docs.microsoft.com/en-us/dotnet/core/extensions/logging?tabs=command-line)) adds the ability to use [string interpolation](https://docs.microsoft.com/en-us/dotnet/fsharp/language-reference/interpolated-strings) for strongly typed strings while getting the benefits of [structured logging](https://stackify.com/what-is-structured-logging-and-why-developers-need-it/) by converting the interpolated string into a [message template](https://messagetemplates.org/#:~:text=A%20message%20template%20is%20a,it%20into%20human%2Dfriendly%20text.) transparently.
+
+## Why does this exist?
+
+[Structured logging](https://stackify.com/what-is-structured-logging-and-why-developers-need-it/) with [message templates](https://messagetemplates.org/#:~:text=A%20message%20template%20is%20a,it%20into%20human%2Dfriendly%20text.) are great, except they do one a few problems.
+
+1. They are (usually) positional. If I have the following code:
+
+    ```fsharp
+    let userName = "KirkJ1701"
+    logger.LogWarning("Some user: {Username} has logged in", userName)
+    ```
+
+    if I wanted to add an IpAddress
+
+    ```fsharp
+    let userName = "KirkJ1701"
+    let ipAddress = "KirkJ1701"
+    logger.LogWarning("Some user: {Username} has logged in from {IpAddress}", ipAddress, userName)
+    ```
+
+    I can easily mess up the arguments. This of course looks easy but gets more difficult as you add more logs to structure or rearrange your logs.
+
+2. Normalizing your keys with [semantic convetions](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/trace/semantic_conventions/README.md) makes it easier for you to search across your logs.
+
+    ```fsharp
+    let userName = "SpockV"
+    logger.LogWarning("Some user: {user_name} has logged in", userName)
+    ```
+
+    Adding this log to our application logs the `user_name` but earlier we were logging a `UserName`. If I needed to search across these logs, I would need to know each potential variation of that key name.  (Yes some tools allow you to do that mapping on their side but not all).
+
+## How do I use it?
+
+### Tupled Arguments
+
+One of the currently supported ways is to use tuples. Taking an example above:
+
+```fsharp
+// Some file that containts your normalized names
+module LoggerKeyConsts =
+
+    let [<Literal>] UserName = "UserName"
+
+// .. Some function
+
+let userName = "SpockV"
+logger.LogIWarning($"Some user: {(LoggerKeyConsts.UserName, userName)} has logged in")
+```
+
+The important changes are:
+
+1. `LogWarning` -> `LogIWarning`
+2. `$` in front of the string
+3. `{Username}` became `{(LoggerKeyConsts.UserName, userName)}`
+    - The latter part of this syntax is a tuple with two values.
+
+## Caveats
+
+- Unfortunately F# does not yet support [DefaultInterpolatedStringHandler](https://github.com/fsharp/fslang-suggestions/issues/1108) which means you will still take the interpolated creation hit. However, this library does implement it's own [log formatter](https://github.com/TheAngryByrd/MEL.Flex/blob/19056afce7b39d507f7d99aa10cd36fbdd623f27/src/MEL.Flex/MEL.Flex.fs#L38) which allows for lazy construction of the interpolated string -> message template until it is required or possibly not at all if the [LogLevel](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-6.0#set-log-level-by-command-line-environment-variables-and-other-configuration) configuration is set to a higher threadshold than the log statement.
 ---
 
 ## Builds
