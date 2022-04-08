@@ -49,7 +49,13 @@ type InMemoryLogger() =
             { new IDisposable with
                 member _.Dispose() = beginScopeCalls.Pop() |> ignore }
 
+
+
 module TupleTests =
+    module LogConsts =
+        let [<Literal>] ``user.name`` = "user.name"
+        let inline userName (s : string) = struct (``user.name``, s)
+
     open Helpers
     open MEL.Flex.Tuple
 
@@ -84,6 +90,50 @@ module TupleTests =
                          kvp "{OriginalFormat}" $"Some user {{@{theConst}}} logged into starship" |]
 
                   logger.LogIError $"""Some user {(theConst, theUser)} logged into starship"""
+
+                  let (level, eventId, message, state, ex, scopes) = logger.LogCalls |> Seq.head
+                  Expect.equal level LogLevel.Error ""
+                  Expect.equal eventId (EventId.op_Implicit 0) ""
+                  Expect.equal message $"Some user {theUser} logged into starship" ""
+                  Expect.sequenceEqual state expectedState ""
+                  Expect.equal ex null ""
+                  Expect.equal scopes Array.empty ""
+
+
+              testCase "One struct tuple to interpolate"
+              <| fun _ ->
+                  let logger = InMemoryLogger()
+
+                  let theConst = "UserName"
+                  let theUser = "KirkJ1701"
+
+                  let expectedState =
+                      [| kvp $"@{theConst}" theUser
+                         kvp "{OriginalFormat}" $"Some user {{@{theConst}}} logged into starship" |]
+
+                  logger.LogIError $"""Some user {struct(theConst, theUser)} logged into starship"""
+
+                  let (level, eventId, message, state, ex, scopes) = logger.LogCalls |> Seq.head
+                  Expect.equal level LogLevel.Error ""
+                  Expect.equal eventId (EventId.op_Implicit 0) ""
+                  Expect.equal message $"Some user {theUser} logged into starship" ""
+                  Expect.sequenceEqual state expectedState ""
+                  Expect.equal ex null ""
+                  Expect.equal scopes Array.empty ""
+
+
+              testCase "Helper function creating  named tuple"
+              <| fun _ ->
+                  let logger = InMemoryLogger()
+
+                  let theConst = LogConsts.``user.name``
+                  let theUser = "KirkJ1701"
+
+                  let expectedState =
+                      [| kvp $"@{theConst}" theUser
+                         kvp "{OriginalFormat}" $"Some user {{@{theConst}}} logged into starship" |]
+
+                  logger.LogIError $"""Some user {LogConsts.userName theUser} logged into starship"""
 
                   let (level, eventId, message, state, ex, scopes) = logger.LogCalls |> Seq.head
                   Expect.equal level LogLevel.Error ""

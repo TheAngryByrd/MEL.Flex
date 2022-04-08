@@ -58,6 +58,20 @@ The important changes are:
 3. `{Username}` became `{(LoggerKeyConsts.UserName, userName)}`
     - The latter part of this syntax is a tuple with two values.
 
+Slightly better would be to create helper functions that generate the tuples:
+
+```fsharp
+module LogConsts =
+    let [<Literal>] ``user.name`` = "user.name"
+    let inline userName (s : string) = struct (``user.name``, s)
+
+// .. Some function
+let userName = "SpockV"
+logger.LogIWarning($"Some user: {LogConsts.userName userName} has logged in")
+```
+
+This way, you could apply any type safety or normalization to your log data.
+
 ## Caveats
 
 - Unfortunately F# does not yet support [DefaultInterpolatedStringHandler](https://github.com/fsharp/fslang-suggestions/issues/1108) which means you will still take the interpolated creation hit. However, this library does implement it's own [log formatter](https://github.com/TheAngryByrd/MEL.Flex/blob/19056afce7b39d507f7d99aa10cd36fbdd623f27/src/MEL.Flex/MEL.Flex.fs#L38) which allows for lazy construction of the interpolated string -> message template until it is required or possibly not at all if the [LogLevel](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-6.0#set-log-level-by-command-line-environment-variables-and-other-configuration) configuration is set to a higher threadshold than the log statement.
