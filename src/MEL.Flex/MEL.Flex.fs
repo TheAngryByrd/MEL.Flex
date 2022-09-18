@@ -3,7 +3,6 @@ namespace MEL.Flex
 open System
 
 
-
 module Tuple =
     open System
     open System.Runtime.CompilerServices
@@ -14,13 +13,16 @@ module Tuple =
     [<Literal>]
     let OriginalFormat = "{OriginalFormat}"
 
-    let internal setMessageInterpolated (message: FormattableString) : obj array * string array * obj array =
+    let internal setMessageInterpolated
+        (message: FormattableString)
+        : obj array * string array * obj array =
         let msgArgs = message.GetArguments()
         let names = Array.zeroCreate msgArgs.Length
         let namesTemplate = Array.zeroCreate msgArgs.Length
         let args = Array.zeroCreate msgArgs.Length
 
-        for i = 0 to msgArgs.Length - 1 do
+        for i = 0 to msgArgs.Length
+                     - 1 do
             match msgArgs.[i] with
             | :? ITuple as t when t.Length = 2 ->
                 names.[i] <- $"@{t.Item(0)}"
@@ -37,7 +39,9 @@ module Tuple =
     // [<Struct>]
     type internal TupleLogValuesFormatter(formattable: FormattableString) =
 
-        let _count = formattable.ArgumentCount + 1
+        let _count =
+            formattable.ArgumentCount
+            + 1
 
         let results =
             lazy
@@ -75,7 +79,11 @@ module Tuple =
             member this.Item
                 with get (index: int): KeyValuePair<string, obj> =
                     // printfn "TupleLogValuesFormatter.get"
-                    if index < 0 || index >= _count then
+                    if
+                        index < 0
+                        || index
+                           >= _count
+                    then
                         raise (IndexOutOfRangeException(nameof (index)))
                     elif (index = (_count - 1)) then
                         KeyValuePair<string, obj>(OriginalFormat, this.MessageTemplate)
@@ -97,13 +105,16 @@ module Tuple =
                 (this :> IEnumerable<_>).GetEnumerator() :> IEnumerator
 
     type ILogger with
+
         member this.LogFTrace(eventId: EventId, ex: Exception, message: FormattableString) =
             this.LogF(LogLevel.Trace, eventId, ex, message)
 
         member this.LogFTrace(eventId: EventId, message: FormattableString) =
             this.LogF(LogLevel.Trace, eventId, message)
 
-        member this.LogFTrace(ex: Exception, message: FormattableString) = this.LogF(LogLevel.Trace, ex, message)
+        member this.LogFTrace(ex: Exception, message: FormattableString) =
+            this.LogF(LogLevel.Trace, ex, message)
+
         member this.LogFTrace(message: FormattableString) = this.LogF(LogLevel.Trace, message)
 
         member this.LogFDebug(eventId: EventId, ex: Exception, message: FormattableString) =
@@ -112,7 +123,9 @@ module Tuple =
         member this.LogFDebug(eventId: EventId, message: FormattableString) =
             this.LogF(LogLevel.Debug, eventId, message)
 
-        member this.LogFDebug(ex: Exception, message: FormattableString) = this.LogF(LogLevel.Debug, ex, message)
+        member this.LogFDebug(ex: Exception, message: FormattableString) =
+            this.LogF(LogLevel.Debug, ex, message)
+
         member this.LogFDebug(message: FormattableString) = this.LogF(LogLevel.Debug, message)
 
         member this.LogFInformation(eventId: EventId, ex: Exception, message: FormattableString) =
@@ -144,7 +157,9 @@ module Tuple =
         member this.LogFError(eventId: EventId, message: FormattableString) =
             this.LogF(LogLevel.Error, eventId, message)
 
-        member this.LogFError(ex: Exception, message: FormattableString) = this.LogF(LogLevel.Error, ex, message)
+        member this.LogFError(ex: Exception, message: FormattableString) =
+            this.LogF(LogLevel.Error, ex, message)
+
         member this.LogFError(message: FormattableString) = this.LogF(LogLevel.Error, message)
 
         member this.LogFCritical(eventId: EventId, ex: Exception, message: FormattableString) =
@@ -158,7 +173,8 @@ module Tuple =
 
         member this.LogFCritical(message: FormattableString) = this.LogF(LogLevel.Critical, message)
 
-        member this.LogF(logLevel: LogLevel, message: FormattableString) = this.LogF(logLevel, 0, null, message)
+        member this.LogF(logLevel: LogLevel, message: FormattableString) =
+            this.LogF(logLevel, 0, null, message)
 
         member this.LogF(logLevel: LogLevel, eventId: EventId, message: FormattableString) =
             this.LogF(logLevel, eventId, null, message)
@@ -166,7 +182,13 @@ module Tuple =
         member this.LogF(logLevel: LogLevel, ex: Exception, message: FormattableString) =
             this.LogF(logLevel, 0, ex, message)
 
-        member this.LogF(logLevel: LogLevel, eventId: EventId, ex: Exception, message: FormattableString) =
+        member this.LogF
+            (
+                logLevel: LogLevel,
+                eventId: EventId,
+                ex: Exception,
+                message: FormattableString
+            ) =
             this.Log(
                 logLevel,
                 eventId,

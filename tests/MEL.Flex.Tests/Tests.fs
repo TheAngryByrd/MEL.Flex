@@ -16,7 +16,9 @@ type InMemoryLogger() =
 
     let getStateValues state =
         match box state with
-        | :? IReadOnlyCollection<KeyValuePair<string, obj>> as s -> s :> seq<_> |> Seq.toArray
+        | :? IReadOnlyCollection<KeyValuePair<string, obj>> as s ->
+            s :> seq<_>
+            |> Seq.toArray
         | _ -> Array.empty
 
     member _.LogCalls = logCalls
@@ -47,8 +49,10 @@ type InMemoryLogger() =
             beginScopeCalls.Push state
 
             { new IDisposable with
-                member _.Dispose() = beginScopeCalls.Pop() |> ignore }
-
+                member _.Dispose() =
+                    beginScopeCalls.Pop()
+                    |> ignore
+            }
 
 
 module TupleTests =
@@ -63,105 +67,125 @@ module TupleTests =
 
     [<Tests>]
     let tests =
-        testList
-            "Tuples"
-            [ testCase "No items to interpolate"
-              <| fun _ ->
-                  let logger = InMemoryLogger()
+        testList "Tuples" [
+            testCase "No items to interpolate"
+            <| fun _ ->
+                let logger = InMemoryLogger()
 
-                  let expectedState = [| kvp "{OriginalFormat}" "LOL" |]
+                let expectedState = [| kvp "{OriginalFormat}" "LOL" |]
 
-                  logger.LogFCritical $"""LOL"""
-                  let (level, eventId, message, state, ex, scopes) = logger.LogCalls |> Seq.head
-                  Expect.equal level LogLevel.Critical ""
-                  Expect.equal eventId (EventId.op_Implicit 0) ""
-                  Expect.equal message "LOL" ""
-                  Expect.sequenceEqual state expectedState ""
-                  Expect.equal ex null ""
-                  Expect.equal scopes Array.empty ""
+                logger.LogFCritical $"""LOL"""
 
-              testCase "One tuple to interpolate"
-              <| fun _ ->
-                  let logger = InMemoryLogger()
+                let (level, eventId, message, state, ex, scopes) =
+                    logger.LogCalls
+                    |> Seq.head
 
-                  let theConst = "UserName"
-                  let theUser = "KirkJ1701"
+                Expect.equal level LogLevel.Critical ""
+                Expect.equal eventId (EventId.op_Implicit 0) ""
+                Expect.equal message "LOL" ""
+                Expect.sequenceEqual state expectedState ""
+                Expect.equal ex null ""
+                Expect.equal scopes Array.empty ""
 
-                  let expectedState =
-                      [| kvp $"@{theConst}" theUser
-                         kvp "{OriginalFormat}" $"Some user {{@{theConst}}} logged into starship" |]
+            testCase "One tuple to interpolate"
+            <| fun _ ->
+                let logger = InMemoryLogger()
 
-                  logger.LogFError $"""Some user {(theConst, theUser)} logged into starship"""
+                let theConst = "UserName"
+                let theUser = "KirkJ1701"
 
-                  let (level, eventId, message, state, ex, scopes) = logger.LogCalls |> Seq.head
-                  Expect.equal level LogLevel.Error ""
-                  Expect.equal eventId (EventId.op_Implicit 0) ""
-                  Expect.equal message $"Some user {theUser} logged into starship" ""
-                  Expect.sequenceEqual state expectedState ""
-                  Expect.equal ex null ""
-                  Expect.equal scopes Array.empty ""
+                let expectedState = [|
+                    kvp $"@{theConst}" theUser
+                    kvp "{OriginalFormat}" $"Some user {{@{theConst}}} logged into starship"
+                |]
 
+                logger.LogFError $"""Some user {(theConst, theUser)} logged into starship"""
 
-              testCase "One struct tuple to interpolate"
-              <| fun _ ->
-                  let logger = InMemoryLogger()
+                let (level, eventId, message, state, ex, scopes) =
+                    logger.LogCalls
+                    |> Seq.head
 
-                  let theConst = "UserName"
-                  let theUser = "KirkJ1701"
-
-                  let expectedState =
-                      [| kvp $"@{theConst}" theUser
-                         kvp "{OriginalFormat}" $"Some user {{@{theConst}}} logged into starship" |]
-
-                  logger.LogFError $"""Some user {struct (theConst, theUser)} logged into starship"""
-
-                  let (level, eventId, message, state, ex, scopes) = logger.LogCalls |> Seq.head
-                  Expect.equal level LogLevel.Error ""
-                  Expect.equal eventId (EventId.op_Implicit 0) ""
-                  Expect.equal message $"Some user {theUser} logged into starship" ""
-                  Expect.sequenceEqual state expectedState ""
-                  Expect.equal ex null ""
-                  Expect.equal scopes Array.empty ""
+                Expect.equal level LogLevel.Error ""
+                Expect.equal eventId (EventId.op_Implicit 0) ""
+                Expect.equal message $"Some user {theUser} logged into starship" ""
+                Expect.sequenceEqual state expectedState ""
+                Expect.equal ex null ""
+                Expect.equal scopes Array.empty ""
 
 
-              testCase "Helper function creating  named tuple"
-              <| fun _ ->
-                  let logger = InMemoryLogger()
+            testCase "One struct tuple to interpolate"
+            <| fun _ ->
+                let logger = InMemoryLogger()
 
-                  let theConst = LogConsts.``user.name``
-                  let theUser = "KirkJ1701"
+                let theConst = "UserName"
+                let theUser = "KirkJ1701"
 
-                  let expectedState =
-                      [| kvp $"@{theConst}" theUser
-                         kvp "{OriginalFormat}" $"Some user {{@{theConst}}} logged into starship" |]
+                let expectedState = [|
+                    kvp $"@{theConst}" theUser
+                    kvp "{OriginalFormat}" $"Some user {{@{theConst}}} logged into starship"
+                |]
 
-                  logger.LogFError $"""Some user {LogConsts.userName theUser} logged into starship"""
+                logger.LogFError $"""Some user {struct (theConst, theUser)} logged into starship"""
 
-                  let (level, eventId, message, state, ex, scopes) = logger.LogCalls |> Seq.head
-                  Expect.equal level LogLevel.Error ""
-                  Expect.equal eventId (EventId.op_Implicit 0) ""
-                  Expect.equal message $"Some user {theUser} logged into starship" ""
-                  Expect.sequenceEqual state expectedState ""
-                  Expect.equal ex null ""
-                  Expect.equal scopes Array.empty ""
+                let (level, eventId, message, state, ex, scopes) =
+                    logger.LogCalls
+                    |> Seq.head
 
-              testCase "Non tuple to interpolate"
-              <| fun _ ->
-                  let logger = InMemoryLogger()
+                Expect.equal level LogLevel.Error ""
+                Expect.equal eventId (EventId.op_Implicit 0) ""
+                Expect.equal message $"Some user {theUser} logged into starship" ""
+                Expect.sequenceEqual state expectedState ""
+                Expect.equal ex null ""
+                Expect.equal scopes Array.empty ""
 
-                  let theConst = "item0"
-                  let theUser = "SpockV"
 
-                  let expectedState =
-                      [| kvp $"@{theConst}" theUser
-                         kvp "{OriginalFormat}" $"Some user {{@{theConst}}} logged into starship" |]
+            testCase "Helper function creating  named tuple"
+            <| fun _ ->
+                let logger = InMemoryLogger()
 
-                  logger.LogFWarning $"""Some user {theUser} logged into starship"""
+                let theConst = LogConsts.``user.name``
+                let theUser = "KirkJ1701"
 
-                  let (level, eventId, message, state, ex, scopes) = logger.LogCalls |> Seq.head
-                  Expect.equal level LogLevel.Warning ""
-                  Expect.equal eventId (EventId.op_Implicit 0) ""
-                  Expect.equal message $"Some user {theUser} logged into starship" ""
-                  Expect.sequenceEqual state expectedState ""
-                  Expect.equal ex null ""
-                  Expect.equal scopes Array.empty "" ]
+                let expectedState = [|
+                    kvp $"@{theConst}" theUser
+                    kvp "{OriginalFormat}" $"Some user {{@{theConst}}} logged into starship"
+                |]
+
+                logger.LogFError $"""Some user {LogConsts.userName theUser} logged into starship"""
+
+                let (level, eventId, message, state, ex, scopes) =
+                    logger.LogCalls
+                    |> Seq.head
+
+                Expect.equal level LogLevel.Error ""
+                Expect.equal eventId (EventId.op_Implicit 0) ""
+                Expect.equal message $"Some user {theUser} logged into starship" ""
+                Expect.sequenceEqual state expectedState ""
+                Expect.equal ex null ""
+                Expect.equal scopes Array.empty ""
+
+            testCase "Non tuple to interpolate"
+            <| fun _ ->
+                let logger = InMemoryLogger()
+
+                let theConst = "item0"
+                let theUser = "SpockV"
+
+                let expectedState = [|
+                    kvp $"@{theConst}" theUser
+                    kvp "{OriginalFormat}" $"Some user {{@{theConst}}} logged into starship"
+                |]
+
+                logger.LogFWarning $"""Some user {theUser} logged into starship"""
+
+                let (level, eventId, message, state, ex, scopes) =
+                    logger.LogCalls
+                    |> Seq.head
+
+                Expect.equal level LogLevel.Warning ""
+                Expect.equal eventId (EventId.op_Implicit 0) ""
+                Expect.equal message $"Some user {theUser} logged into starship" ""
+                Expect.sequenceEqual state expectedState ""
+                Expect.equal ex null ""
+                Expect.equal scopes Array.empty ""
+        ]
