@@ -25,7 +25,7 @@ MEL.Flex (FSharp Logging EXtensions for [Microsoft.Extensions.Logging](https://d
 
     I can easily mess up the arguments. This of course looks easy but gets more difficult as you add more logs to structure or rearrange your logs.
 
-2. Normalizing your keys with [semantic convetions](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/trace/semantic_conventions/README.md) makes it easier for you to search across your logs.
+2. Normalizing your keys with [semantic convetions](https://opentelemetry.io/docs/concepts/semantic-conventions/) makes it easier for you to search across your logs.
 
     ```fsharp
     let userName = "SpockV"
